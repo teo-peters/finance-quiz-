@@ -1,14 +1,33 @@
-export type Question = { question: string; answers: [string, string, string, string]; correctAnswer: number; explanation: string; answerRotation: number };
+export type Difficulty = "beginner" | "intermediate" | "advanced" | "pro";
+export type QuestionText = { question: string; answers: [string, string, string, string]; explanation: string };
+export type BilingualQuestion = { id: string; de: QuestionText; en: QuestionText; correctAnswer: number; art: string; scene: string };
+export type Question = QuestionText & { id: string; correctAnswer: number; answerRotation: number; art: string; scene: string };
+
+export const stableQuestionId = (question: string) => {
+  let hash = 2166136261;
+  for (const character of question) {
+    hash ^= character.codePointAt(0) ?? 0;
+    hash = Math.imul(hash, 16777619);
+  }
+  return `question-${(hash >>> 0).toString(36)}`;
+};
 export type Category = { id: string; title: string; icon: string; description: string; questions: Question[] };
 
-let questionOrder = 0;
 const q = (question: string, answers: [string, string, string, string], correctAnswer: number, explanation: string): Question => {
-  // Spread correct answers across positions so the quiz cannot be solved by a pattern.
-  const shift = questionOrder++ % answers.length;
-  return { question, answers: [...answers.slice(shift), ...answers.slice(0, shift)] as Question["answers"], correctAnswer: (correctAnswer + answers.length - shift) % answers.length, explanation, answerRotation: shift };
+  const hash = Array.from(question).reduce((value, character) => (value * 31 + character.charCodeAt(0)) >>> 0, 0);
+  const shift = hash % answers.length;
+  return { id: stableQuestionId(question), question, answers: [...answers.slice(shift), ...answers.slice(0, shift)] as Question["answers"], correctAnswer: (correctAnswer + answers.length - shift) % answers.length, explanation, answerRotation: shift, art: "", scene: "" };
 };
 
-export const categories: Category[] = [
+const beginnerScenes: Record<string, string[]> = {
+  crypto: ["bitcoin-network", "peer-to-peer-transfer", "bitcoin-vs-euro", "blockchain-ledger", "crypto-volatility", "exchange-wallet", "bitcoin-supply-cap", "stablecoin-peg", "crypto-loss-risk", "private-key-security"],
+  stocks: ["share-ownership", "index-etf-basket", "dividend-payment", "pe-ratio", "market-capitalization", "stock-index", "exchange-order-book", "company-shares", "accumulating-fund", "stock-diversification"],
+  economy: ["inflation-prices", "central-bank-rate", "gross-domestic-product", "unemployment-measure", "rate-hike-policy", "recession-output", "purchasing-power", "deflation-prices", "rate-cut-policy", "nominal-interest-rate"],
+  personal: ["compound-interest", "emergency-fund", "loan-apr", "investment-diversification", "household-budget", "loan-principal", "credit-card-minimum", "liquid-assets", "savings-rate", "loan-cost-comparison"],
+  trading: ["candlestick-ohlc", "stop-loss-gap", "limit-order-price", "reward-risk-ratio", "leverage-impact", "market-spread", "execution-slippage", "trade-position-sizing", "trading-fomo", "trading-journal"],
+};
+
+const categoryData: Category[] = [
   { id: "crypto", title: "Crypto Knowledge", icon: "₿", description: "Bitcoin, digitale Währungen und sichere Grundlagen verstehen.", questions: [
     q("Was ist Bitcoin am ehesten?", ["Ein digitaler Vermögenswert und ein Zahlungsnetzwerk ohne zentrale Bank", "Eine Aktie eines Technologieunternehmens", "Eine staatliche digitale Währung", "Ein Guthaben, das eine Geschäftsbank garantiert"], 0, "Bitcoin ermöglicht digitale Übertragungen in einem offenen Netzwerk, das nicht von einer einzelnen Bank betrieben wird."),
     q("Welches Problem soll Bitcoin grundsätzlich angehen?", ["Digitale Werte direkt zwischen Menschen übertragen, ohne eine zentrale Stelle für jede Zahlung zu benötigen", "Die Preise aller Waren stabil halten", "Kredite ohne Rückzahlung ermöglichen", "Jede Zahlung anonym und nicht nachvollziehbar machen"], 0, "Das Netzwerk soll direkte digitale Übertragungen ermöglichen; Transaktionen sind öffentlich einsehbar und der Kurs schwankt."),
@@ -70,3 +89,12 @@ export const categories: Category[] = [
     q("Warum ist ein Trading-Tagebuch nützlich?", ["Es hilft, Entscheidungen und Ergebnisse systematisch auszuwerten", "Es sagt den nächsten Kurs sicher voraus", "Es senkt automatisch Ordergebühren", "Es ersetzt Risikomanagement"], 0, "Dokumentierte Ein- und Ausstiege sowie Gründe helfen, Muster und Fehler zu erkennen."),
   ] },
 ];
+
+export const categories = categoryData.map((category) => ({
+  ...category,
+  questions: category.questions.map((question, index) => {
+    const scene = beginnerScenes[category.id]?.[index];
+    if (!scene) throw new Error(`No beginner illustration assigned to ${category.id} question ${index + 1}`);
+    return { ...question, art: `${category.id}-beginner-${scene}`, scene };
+  }),
+}));

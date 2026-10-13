@@ -1,4 +1,4 @@
-import type { Question } from "./quiz-data";
+import type { Difficulty, Question } from "./quiz-data";
 
 export type Language = "en" | "de";
 export type QuestionText = Pick<Question, "question" | "answers" | "explanation">;
@@ -8,7 +8,9 @@ export const copy = {
     metaDescription: "Choose a category and test your knowledge of crypto, stocks, the economy, personal finance and trading.",
     navLabel: "Main navigation", homeLabel: "Finance Quiz home", languageLabel: "Language", navCategories: "Categories", navAbout: "About", freeToPlay: "Free to play",
     eyebrow: "FINANCIAL LITERACY, MADE INTERACTIVE", headline: "How strong is your", headlineAccent: "financial knowledge?", subtitle: "Choose a category. Test yourself. Level up.",
-    explore: "Explore all categories", categoriesKicker: "PICK YOUR CHALLENGE", categoriesTitle: "Explore categories", topics: "TOPICS", questions: "QUESTIONS", questionsEach: "10 questions each", questionCount: "questions", startQuiz: "Start Quiz",
+    explore: "Explore all categories", categoriesKicker: "PICK YOUR CHALLENGE", categoriesTitle: "Explore categories", topics: "TOPICS", questions: "QUESTIONS", questionsEach: "10 questions per level", questionCount: "questions", startQuiz: "Start Quiz",
+    difficultyKicker: "MAKE IT YOUR CHALLENGE", difficultyTitle: "Choose your level", difficultyDescription: "Every level has a fresh set of questions, made for the way you want to learn.", levelQuestions: "10 questions", levelBeginner: "Beginner", levelIntermediate: "Intermediate", levelAdvanced: "Advanced", levelPro: "Pro",
+    levelBeginnerDescription: "Start with essential terms and clear, everyday concepts.", levelIntermediateDescription: "Connect the ideas and put core knowledge to work.", levelAdvancedDescription: "Explore detailed analysis, calculations and trade-offs.", levelProDescription: "Tackle expert scenarios and nuanced decisions.", levelLabel: "LEVEL", backLevels: "Choose another level", chooseLevel: "Choose level", allLevels: "40 questions across 4 levels",
     bannerTitle: "Small steps. Smarter money decisions.", bannerText: "Build your financial confidence, one question at a time.", footer: "KNOWLEDGE IS YOUR BEST INVESTMENT.",
     quizComplete: "QUIZ COMPLETE", yourResult: "Your result", correctAnswers: "correct answers", correctCount: "correct", questionLabel: "QUESTION", of: "OF", chooseAnswer: "CHOOSE THE CORRECT ANSWER", selectHint: "Select an answer to continue", correct: "Correct!", incorrect: "Not quite.",
     nextQuestion: "Next Question", seeResults: "See Results", tryAgain: "Try Again", backCategories: "Back to Categories", categoriesShort: "Categories", learnAsYouGo: "Take your time. Learn as you go.", wellPlayed: "Well played!", resultPerfect: "Perfect! You know this topic inside out.", resultStrong: "Great result. You have a solid grasp of the basics.", resultStart: "A good start. Keep practising to build your confidence.", resultLearn: "Every journey starts somewhere. Use the explanations to learn as you go.",
@@ -18,7 +20,9 @@ export const copy = {
     metaDescription: "Wähle eine Kategorie und teste dein Wissen zu Kryptowährungen, Aktien, Wirtschaft, persönlichen Finanzen und Trading.",
     navLabel: "Hauptnavigation", homeLabel: "Finance Quiz Startseite", languageLabel: "Sprache", navCategories: "Kategorien", navAbout: "Über uns", freeToPlay: "Kostenlos spielen",
     eyebrow: "FINANZWISSEN, INTERAKTIV ERLEBT", headline: "Wie gut kennst du dich mit", headlineAccent: "Finanzen aus?", subtitle: "Kategorie wählen. Wissen testen. Weiterkommen.",
-    explore: "Alle Kategorien ansehen", categoriesKicker: "WÄHLE DEINE HERAUSFORDERUNG", categoriesTitle: "Kategorien entdecken", topics: "THEMEN", questions: "FRAGEN", questionsEach: "10 Fragen je Kategorie", questionCount: "Fragen", startQuiz: "Quiz starten",
+    explore: "Alle Kategorien ansehen", categoriesKicker: "WÄHLE DEINE HERAUSFORDERUNG", categoriesTitle: "Kategorien entdecken", topics: "THEMEN", questions: "FRAGEN", questionsEach: "10 Fragen pro Level", questionCount: "Fragen", startQuiz: "Quiz starten",
+    difficultyKicker: "WÄHLE DEINE HERAUSFORDERUNG", difficultyTitle: "Wähle dein Level", difficultyDescription: "Jedes Level bietet eigene Fragen – passend dazu, wie tief du einsteigen möchtest.", levelQuestions: "10 Fragen", levelBeginner: "Beginner", levelIntermediate: "Intermediate", levelAdvanced: "Advanced", levelPro: "Pro",
+    levelBeginnerDescription: "Starte mit wichtigen Begriffen und klaren Grundlagen.", levelIntermediateDescription: "Verknüpfe Zusammenhänge und wende dein Wissen an.", levelAdvancedDescription: "Analysiere anspruchsvolle Konzepte, Zahlen und Abwägungen.", levelProDescription: "Löse Experten-Szenarien und triff fundierte Entscheidungen.", levelLabel: "LEVEL", backLevels: "Anderes Level wählen", chooseLevel: "Level wählen", allLevels: "40 Fragen in 4 Levels",
     bannerTitle: "Kleine Schritte. Bessere Finanzentscheidungen.", bannerText: "Stärke dein Finanzwissen – eine Frage nach der anderen.", footer: "WISSEN IST DEINE BESTE INVESTITION.",
     quizComplete: "QUIZ ABGESCHLOSSEN", yourResult: "Dein Ergebnis", correctAnswers: "richtige Antworten", correctCount: "richtig", questionLabel: "FRAGE", of: "VON", chooseAnswer: "WÄHLE DIE RICHTIGE ANTWORT", selectHint: "Wähle eine Antwort, um fortzufahren", correct: "Richtig!", incorrect: "Nicht ganz.",
     nextQuestion: "Nächste Frage", seeResults: "Ergebnis ansehen", tryAgain: "Noch einmal spielen", backCategories: "Zurück zu den Kategorien", categoriesShort: "Kategorien", learnAsYouGo: "Lass dir Zeit und lerne Schritt für Schritt.", wellPlayed: "Gut gemacht!", resultPerfect: "Perfekt! Du kennst dich mit diesem Thema bestens aus.", resultStrong: "Starkes Ergebnis. Die Grundlagen sitzen bereits gut.", resultStart: "Ein guter Anfang. Mit etwas Übung wächst deine Sicherheit.", resultLearn: "Jede Lernreise beginnt irgendwo. Die Erklärungen helfen dir dabei.",
@@ -46,6 +50,25 @@ export const categoryCopy: Record<string, Record<Language, { title: string; desc
   trading: {
     en: { title: "Trading & Investing", description: "Orders, charts and disciplined risk management." },
     de: { title: "Trading & Investieren", description: "Orders, Charts und diszipliniertes Risikomanagement." },
+  },
+};
+
+export const difficultyCopy: Record<Difficulty, Record<Language, { description: string; icon: string }>> = {
+  beginner: {
+    en: { description: copy.en.levelBeginnerDescription, icon: "✳" },
+    de: { description: copy.de.levelBeginnerDescription, icon: "✳" },
+  },
+  intermediate: {
+    en: { description: copy.en.levelIntermediateDescription, icon: "⌁" },
+    de: { description: copy.de.levelIntermediateDescription, icon: "⌁" },
+  },
+  advanced: {
+    en: { description: copy.en.levelAdvancedDescription, icon: "◈" },
+    de: { description: copy.de.levelAdvancedDescription, icon: "◈" },
+  },
+  pro: {
+    en: { description: copy.en.levelProDescription, icon: "✦" },
+    de: { description: copy.de.levelProDescription, icon: "✦" },
   },
 };
 
