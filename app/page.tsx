@@ -6,6 +6,7 @@ import { categories, type Category, type Difficulty, type QuestionText } from ".
 import { levelQuestions } from "./level-data";
 import { categoryCopy, copy, difficultyCopy, englishQuestions, type Language } from "./translations";
 import { LevelArtwork, QuestionArtwork } from "./question-art";
+import { sourceForQuestion } from "./question-sources";
 
 const LANGUAGE_STORAGE_KEY = "finance-quiz-language";
 const levels: Difficulty[] = ["beginner", "intermediate", "advanced", "pro"];
@@ -57,6 +58,7 @@ export default function Home() {
       scene: sourceQuestion.scene,
     };
   })();
+  const questionSource = category && question ? sourceForQuestion(category.id, question.question) : null;
   const isComplete = Boolean(category && difficulty && currentQuestion >= questionCount);
 
   useEffect(() => {
@@ -196,6 +198,7 @@ export default function Home() {
           <div className="eyebrow"><span /> {t.eyebrow}</div>
           <h1>{t.headline}<br /><span>{t.headlineAccent}</span></h1>
           <p className="hero-copy">{t.subtitle}</p>
+          <p className="hero-source-note"><span aria-hidden="true">◈</span>{t.sourceNote}</p>
           <a className="hero-cta" href="#categories">{t.explore} <span>↓</span></a>
           <div className="hero-meta"><span>✦ &nbsp;{categories.length} {t.topics.toLowerCase()}</span><span>◷ &nbsp;{t.allLevels}</span><span>✓ &nbsp;{t.freeToPlay}</span></div>
           <div className="hero-orbit" aria-hidden="true"><span className="hero-token"><b>$</b></span><i /><i /><i /></div>
@@ -260,6 +263,7 @@ export default function Home() {
           <p className="question-kicker">{t.chooseAnswer}</p><h1>{question.question}</h1>
           <div className="answer-list">{question.answers.map((answer, index) => { const selected = selectedAnswer === index; const correct = index === question.correctAnswer; const state = selectedAnswer === null ? "" : correct ? " answer-correct" : selected ? " answer-incorrect" : ""; return <button className={`answer-option${state}`} key={answer} onClick={() => chooseAnswer(index)} disabled={selectedAnswer !== null} aria-pressed={selected}><span className="answer-letter">{String.fromCharCode(65 + index)}</span><span className="answer-text">{answer}</span>{selectedAnswer !== null && correct && <span className="answer-result">✓</span>}{selected && !correct && <span className="answer-result">×</span>}</button>; })}</div>
           {selectedAnswer !== null && <div className={`feedback ${selectedAnswer === question.correctAnswer ? "feedback-correct" : "feedback-incorrect"}`}><strong>{selectedAnswer === question.correctAnswer ? t.correct : t.incorrect}</strong><span>{question.explanation}</span></div>}
+          {questionSource && <div className="question-source"><span>{t.sourceLabel}</span><a href={questionSource.url} target="_blank" rel="noreferrer">{questionSource.name}<span aria-hidden="true"> ↗</span></a></div>}
           <div className="question-actions">{selectedAnswer === null ? <span className="select-hint">{t.selectHint}</span> : <button className="primary-button next-button" onClick={nextQuestion}>{currentQuestion === questionCount - 1 ? t.seeResults : t.nextQuestion}<span>→</span></button>}</div>
         </div>
         <div className="quiz-footer"><span>{t.learnAsYouGo}</span><span>{currentQuestion + 1} <i>/</i> {questionCount}</span></div>
