@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Finance Quiz — Test your financial knowledge",
   description:
     "Choose a category and test your knowledge of crypto, stocks, the economy, personal finance and trading.",
+  metadataBase: new URL("https://finquiz.online"),
 };
 
 export default function RootLayout({

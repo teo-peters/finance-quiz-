@@ -7,6 +7,7 @@ import { levelQuestions } from "./level-data";
 import { categoryCopy, copy, difficultyCopy, englishQuestions, type Language } from "./translations";
 import { LevelArtwork, QuestionArtwork } from "./question-art";
 import { sourceForQuestion } from "./question-sources";
+import { LegalFooter } from "./legal-footer";
 
 const LANGUAGE_STORAGE_KEY = "finance-quiz-language";
 const levels: Difficulty[] = ["beginner", "intermediate", "advanced", "pro"];
@@ -268,7 +269,7 @@ export default function Home() {
         </div>
         <div className="quiz-footer"><span>{t.learnAsYouGo}</span><span>{currentQuestion + 1} <i>/</i> {questionCount}</span></div>
       </section> : <p role="alert">{t.noQuestions}</p>}
-      <footer className="page-footer"><span>FINANCE QUIZ</span><span>{t.footer}</span><span>© 2026</span></footer>
+      <div className="page-footer"><span>FINANCE QUIZ</span><span>{t.footer}</span><LegalFooter /></div>
     </section>
   </main>;
 }
